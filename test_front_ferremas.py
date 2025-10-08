@@ -21,45 +21,65 @@ credenciales = [
     ("karol_dance20@funao.com","123411funao"),
 ]
 
-url = "http://localhost/Control/Control/login.php"
+url = "http://localhost/Control_testing/login.php"
 
 options = webdriver.ChromeOptions()
-# options.add_argument("--headless=new")
+# options.add_argument("--headless=new")  # si lo tienes activado NO verás la ventana
 options.add_argument("--window-size=1200,900")
+# Esta opción evita que Chrome se cierre cuando el script termina
+options.add_experimental_option("detach", True)
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 wait = WebDriverWait(driver, 10)
 
 try:
     for index, (username, password) in enumerate(credenciales, start=1):
-        print(f"[{index}/{len(credenciales)}] Probando credencial: {username} / {password}")
-
+        print(f"[{index}/{len(credenciales)}] Probando: {username} / {password}")
         driver.get(url)
 
         try:
-            # Espera hasta que los campos sean interactuables (un solo elemento)
             uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
             pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
         except TimeoutException:
-            print(f"  ❌ No se encontraron los campos en la página para la credencial {username}. Continuando...")
-            continue
+            print(f"  ❌ No se encontraron los campos para {username}. Saltando...")
+            continue  # avanza a la siguiente credencial
 
-        try:
-            # limpiar y enviar
-            uname.clear()
-            uname.send_keys(username)
+        uname.clear()
+        uname.send_keys(username)
+        pwd.clear()
+        pwd.send_keys(password)
+        pwd.send_keys(Keys.RETURN)
 
-            pwd.clear()
-            pwd.send_keys(password)
+        sleep(1.2)
 
-            # enviar con Enter
-            pwd.send_keys(Keys.RETURN)
+    # ejemplo: intentar login admin al final (si quieres)
+    admin_user = "admin"
+    admin_password = "admin"
+    try:
+        # volver a la página por si acaso
+        driver.get(url)
+        uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
+        pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
 
-            sleep(1.2)
-        except ElementNotInteractableException:
-            print(f"  ❌ Elemento no interactuable para {username}. Continuando...")
-            continue
+        uname.clear()
+        uname.send_keys(admin_user)
+        pwd.clear()
+        pwd.send_keys(admin_password)
+        pwd.send_keys(Keys.RETURN)
 
-    print("PROCESO TERMINADO")
+        prduc = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "img-responsive")))
+
+        prduc.click()
+        print("Intento admin realizado.")
+    except TimeoutException:
+        print("  ❌ No se pudo realizar login admin: campos no encontrados.")
+
+    print("PROCESO TERMINADO (la ventana de Chrome se mantendrá abierta gracias a 'detach').")
+    input("Presiona Enter para cerrar el navegador y terminar el script...")
+
+except Exception as e:
+    print("Ocurrió un error inesperado:", e)
 finally:
-    driver.quit()
+    # Si quieres que se cierre automáticamente al finalizar, descomenta la siguiente línea:
+    # driver.quit()
+    pass
