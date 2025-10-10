@@ -21,7 +21,7 @@ credenciales = [
     ("karol_dance20@funao.com","123411funao"),
 ]
 
-url = "http://localhost/control/login.php"
+url = "http://localhost/Control_testing/login.php"
 
 options = webdriver.ChromeOptions()
 # options.add_argument("--headless=new")  # si lo tienes activado NO verás la ventana
@@ -32,31 +32,36 @@ options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 wait = WebDriverWait(driver, 10)
 
-try:
-    for index, (username, password) in enumerate(credenciales, start=1):
-        print(f"[{index}/{len(credenciales)}] Probando: {username} / {password}")
-        driver.get(url)
+def loginTest ():
+    try:
+        for index, (username, password) in enumerate(credenciales, start=1):
+            print(f"[{index}/{len(credenciales)}] Probando: {username} / {password}")
+            driver.get(url)
 
-        try:
-            uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
-            pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
-        except TimeoutException:
-            print(f"  ❌ No se encontraron los campos para {username}. Saltando...")
-            continue  # avanza a la siguiente credencial
+            try:
+                uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
+                pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
+            except TimeoutException:
+                print(f"  ❌ No se encontraron los campos para {username}. Saltando...")
+                continue  # avanza a la siguiente credencial
 
-        uname.clear()
-        uname.send_keys(username)
-        pwd.clear()
-        pwd.send_keys(password)
-        pwd.send_keys(Keys.RETURN)
+            uname.clear()
+            uname.send_keys(username)
+            pwd.clear()
+            pwd.send_keys(password)
+            pwd.send_keys(Keys.RETURN)
 
-        sleep(1.2)
+            sleep(1.2)
 
-    # ejemplo: intentar login admin al final (si quieres)
+        # ejemplo: intentar login admin al final (si quieres)
+    except:
+        print('error de login')
+
+def seleccionarProducto():
     admin_user = "admin"
     admin_password = "admin"
     try:
-        # volver a la página por si acaso
+            # volver a la página por si acaso
         driver.get(url)
         uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
         pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
@@ -76,19 +81,75 @@ try:
 
     print("PROCESO TERMINADO (la ventana de Chrome se mantendrá abierta gracias a 'detach').")
 
+def tetsLogout():
+
     try:
-        logout = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-off")))
+
+        logout = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-tags")))
 
         logout.click()
 
+        print('logout completado')
     except TimeoutException:
         print('error al cerrar sesion')
 
-    input("Presiona Enter para cerrar el navegador y terminar el script...")
+def testeCategoria():
+    admin_user = "admin"
+    admin_password = "admin"
+    try:
+
+        driver.get(url)
+        uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
+        pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
+
+        uname.clear()
+        uname.send_keys(admin_user)
+        pwd.clear()
+        pwd.send_keys(admin_password)
+        pwd.send_keys(Keys.RETURN)
+            
+        categorias = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-off")))
+
+        categorias.click()
+
+        print('test categoria completo')
+
+    except TimeoutException:
+
+        input("no se puedo probar categoria")
+def añadir_categoria():
+    try:
+        añadir = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"btn-success")))
+
+        añadir.click()
+
+        nom = wait.until(EC.element_to_be_clickable((By.ID, "nombre")))
+        des = wait.until(EC.element_to_be_clickable((By.ID, "descripcion")))
+
+        nom.send_keys("wasaaaaa")
+        des.send_keys("wasaaaaa de wasaaaaaaa")
+
+        des.send_keys(Keys.RETURN)
+
+        print('categoria añadida sin problemas')
+    except:
+        print('error fatal')
+try:
+    loginTest()
+    sleep(5)
+    seleccionarProducto()
+    sleep(5)
+    tetsLogout()
+    sleep(5)
+    testeCategoria()
+    sleep(5)
+    añadir_categoria()
+
+    print('pruebas realizadas con exito')
+
 
 except Exception as e:
     print("Ocurrió un error inesperado:", e)
 finally:
-    # Si quieres que se cierre automáticamente al finalizar, descomenta la siguiente línea:
-    # driver.quit()
+    
     pass
