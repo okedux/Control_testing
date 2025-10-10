@@ -21,7 +21,7 @@ credenciales = [
     ("karol_dance20@funao.com","123411funao"),
 ]
 
-url = "http://localhost/Control_testing/login.php"
+url = "http://localhost/control/login.php"
 
 options = webdriver.ChromeOptions()
 # options.add_argument("--headless=new")  # si lo tienes activado NO verás la ventana
@@ -75,6 +75,15 @@ try:
         print("  ❌ No se pudo realizar login admin: campos no encontrados.")
 
     print("PROCESO TERMINADO (la ventana de Chrome se mantendrá abierta gracias a 'detach').")
+
+    try:
+        logout = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-off")))
+
+        logout.click()
+
+    except TimeoutException:
+        print('error al cerrar sesion')
+
     input("Presiona Enter para cerrar el navegador y terminar el script...")
 
 except Exception as e:
