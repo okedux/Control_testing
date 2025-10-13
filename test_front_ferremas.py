@@ -1,3 +1,6 @@
+from gevent import monkey
+monkey.patch_all()
+
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException, ElementNotInteractableException
+import locust
 
 credenciales = [
     ("cangri@gmail.com","12345funao"),
@@ -29,7 +33,12 @@ options.add_argument("--window-size=1200,900")
 # Esta opción evita que Chrome se cierre cuando el script termina
 options.add_experimental_option("detach", True)
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+try:
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+except Exception as e:
+    print("Failed to start Chrome WebDriver. This usually means Chrome is not installed, the ChromeDriver is incompatible, or the driver failed to start.")
+    print("Original error:", e)
+    raise
 wait = WebDriverWait(driver, 10)
 
 def loginTest ():
@@ -207,6 +216,27 @@ def añadir_usuario():
     except:
         print("error")
 
+def estres_test():
+    class UserBehavior(locust.TaskSet):
+        @locust.task
+        def login(self):
+            self.client.post("/login.php", {
+                "user_name": "admin",
+                "user_password": "admin"
+            })
+
+        @locust.task
+        def seleccionar_producto(self):
+            self.client.get("/producto.php?id=1")
+
+        @locust.task
+        def logout(self):
+            self.client.get("/logout.php")
+
+    class WebsiteUser(locust.HttpUser):
+        tasks = [UserBehavior]
+        wait_time = locust.between(1, 3)
+
 
 try:
     loginTest()
@@ -220,6 +250,8 @@ try:
     añadir_categoria()
     sleep(5)
     añadir_usuario()
+    sleep(5)
+    estres_test()
 
     print('pruebas realizadas con exito')
 
