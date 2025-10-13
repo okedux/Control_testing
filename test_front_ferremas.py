@@ -107,8 +107,10 @@ def testeCategoria():
         pwd.clear()
         pwd.send_keys(admin_password)
         pwd.send_keys(Keys.RETURN)
+
+        sleep(2)
             
-        categorias = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-off")))
+        categorias = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-tags")))
 
         categorias.click()
 
@@ -119,9 +121,12 @@ def testeCategoria():
         input("no se puedo probar categoria")
 def añadir_categoria():
     try:
-        añadir = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"btn-success")))
+        añadir = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"pull-right")))
+        
 
         añadir.click()
+
+        sleep(2)
 
         nom = wait.until(EC.element_to_be_clickable((By.ID, "nombre")))
         des = wait.until(EC.element_to_be_clickable((By.ID, "descripcion")))
@@ -129,11 +134,80 @@ def añadir_categoria():
         nom.send_keys("wasaaaaa")
         des.send_keys("wasaaaaa de wasaaaaaaa")
 
-        des.send_keys(Keys.RETURN)
+        enter = wait.until(EC.element_to_be_clickable((By.ID,"guardar_datos")))
+
+        enter.click()
+
+        close = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"close")))
+
+        close.click()
 
         print('categoria añadida sin problemas')
     except:
         print('error fatal')
+
+def añadir_usuario():
+    try:
+        nom="benjamin"
+        ape="ojeda"
+        use="okedux"
+        mail="be.ojedao@duocuc.cl"
+        con="GatoWeon69"
+        recon="GatoWeon69"
+
+
+        usuarioSelect = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-user")))
+
+        usuarioSelect.click()
+
+        añadir = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"pull-right")))
+
+        añadir.click()
+
+        print("seleccionar añadir usuario con exito")
+
+        nombre = wait.until(EC.element_to_be_clickable((By.ID,"firstname")))
+        apellidos = wait.until(EC.element_to_be_clickable((By.ID,"lastname")))
+        usuario= wait.until(EC.element_to_be_clickable((By.ID,"user_name")))
+        email = wait.until(EC.element_to_be_clickable((By.ID,"user_email")))
+        contraseña = wait.until(EC.element_to_be_clickable((By.ID,"user_password_new")))
+        reContraseña = wait.until(EC.element_to_be_clickable((By.ID,"user_password_repeat")))
+
+        nombre.send_keys(nom)
+        apellidos.send_keys(ape)
+        usuario.send_keys(use)
+        email.send_keys(mail)
+        contraseña.send_keys(con)
+        reContraseña.send_keys(recon)
+
+        reContraseña.send_keys(Keys.RETURN)
+
+        clos = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"close")))
+
+        clos.click()
+
+        print("usuario añadido con exito ")
+
+        logout = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"glyphicon-off")))
+
+        logout.click()
+
+        uname = wait.until(EC.element_to_be_clickable((By.NAME, "user_name")))
+        pwd = wait.until(EC.element_to_be_clickable((By.NAME, "user_password")))
+
+        uname.clear()
+        uname.send_keys(use)
+        pwd.clear()
+        pwd.send_keys(con)
+        pwd.send_keys(Keys.RETURN)
+
+        print("usuario añadido inicia sesion sin problemas")
+
+
+    except:
+        print("error")
+
+
 try:
     loginTest()
     sleep(5)
@@ -144,6 +218,8 @@ try:
     testeCategoria()
     sleep(5)
     añadir_categoria()
+    sleep(5)
+    añadir_usuario()
 
     print('pruebas realizadas con exito')
 
