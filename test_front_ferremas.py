@@ -81,10 +81,15 @@ def seleccionarProducto():
         pwd.send_keys(admin_password)
         pwd.send_keys(Keys.RETURN)
 
+        print("inicio de sesion como admin con exito")
+
         prduc = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "img-responsive")))
 
         prduc.click()
-        print("Intento admin realizado.")
+        
+        agregar_Stock()
+
+        print("prueba de producto realizada con exito")
     except TimeoutException:
         print("  ❌ No se pudo realizar login admin: campos no encontrados.")
 
@@ -236,22 +241,42 @@ def estres_test():
     class WebsiteUser(locust.HttpUser):
         tasks = [UserBehavior]
         wait_time = locust.between(1, 3)
+    print('prueba de estres completa')
 
+def agregar_Stock():
+    try:
+        añadir = driver.find_element(By.XPATH, "//img[contains(@src, 'stock-in.png')]")
+        añadir.find_element(By.XPATH, "./parent::a").click()
+
+        cantidad = wait.until(EC.element_to_be_clickable((By.NAME,"quantity")))
+
+        cantidad.clear()
+        cantidad.send_keys("19")
+
+        referencia= wait.until(EC.element_to_be_clickable((By.NAME,"reference")))
+
+        referencia.clear()
+        referencia.send_keys("wasaaaa")
+        referencia.send_keys(Keys.RETURN)
+
+        print("stock agregado con exito")
+    except:
+        print('no se pudo agregar stock de producto')
 
 try:
-    loginTest()
-    sleep(5)
+    #loginTest()
+    #sleep(5)
     seleccionarProducto()
-    sleep(5)
-    tetsLogout()
-    sleep(5)
-    testeCategoria()
-    sleep(5)
-    añadir_categoria()
-    sleep(5)
-    añadir_usuario()
-    sleep(5)
-    estres_test()
+    #sleep(5)
+    #tetsLogout()
+    #sleep(5)
+    #testeCategoria()
+    #sleep(5)
+    #añadir_categoria()
+    #sleep(5)
+    #añadir_usuario()
+    #sleep(5)
+    #estres_test()
 
     print('pruebas realizadas con exito')
 
@@ -261,3 +286,4 @@ except Exception as e:
 finally:
     
     pass
+
