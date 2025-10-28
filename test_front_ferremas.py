@@ -1,7 +1,7 @@
 from gevent import monkey
 monkey.patch_all()
 
-from time import sleep
+from time import sleep,time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -11,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException, ElementNotInteractableException
 import locust
+import os
+import pyautogui
 
 credenciales = [
     ("cangri@gmail.com","12345funao"),
@@ -26,6 +28,7 @@ credenciales = [
 ]
 
 url = "http://localhost/Control_testing/login.php"
+capetaCampturas = r"C:\xampp\htdocs\Control_testing\capturas"
 
 options = webdriver.ChromeOptions()
 # options.add_argument("--headless=new")  # si lo tienes activado NO verás la ventana
@@ -40,6 +43,11 @@ except Exception as e:
     print("Original error:", e)
     raise
 wait = WebDriverWait(driver, 10)
+
+def sacar_captura():
+    nombre_archivo = os.path.join(capetaCampturas, f"captura_{int(time())}.png")
+    imagen = pyautogui.screenshot()
+    imagen.save(nombre_archivo)
 
 def loginTest ():
     try:
@@ -65,6 +73,7 @@ def loginTest ():
         # ejemplo: intentar login admin al final (si quieres)
     except:
         print('error de login')
+    sacar_captura()
 
 def seleccionarProducto():
     admin_user = "admin"
@@ -93,7 +102,7 @@ def seleccionarProducto():
     except TimeoutException:
         print("  ❌ No se pudo realizar login admin: campos no encontrados.")
 
-    print("PROCESO TERMINADO (la ventana de Chrome se mantendrá abierta gracias a 'detach').")
+    sacar_captura()
 
 def tetsLogout():
 
@@ -106,6 +115,7 @@ def tetsLogout():
         print('logout completado')
     except TimeoutException:
         print('error al cerrar sesion')
+    sacar_captura()
 
 def testeCategoria():
     admin_user = "admin"
@@ -129,10 +139,12 @@ def testeCategoria():
         categorias.click()
 
         print('test categoria completo')
+        
 
     except TimeoutException:
 
         input("no se puedo probar categoria")
+    sacar_captura()
 def añadir_categoria():
     try:
         añadir = wait.until(EC.element_to_be_clickable((By.CLASS_NAME,"pull-right")))
@@ -159,6 +171,7 @@ def añadir_categoria():
         print('categoria añadida sin problemas')
     except:
         print('error fatal')
+    sacar_captura()
 
 def añadir_usuario():
     try:
@@ -220,6 +233,7 @@ def añadir_usuario():
 
     except:
         print("error")
+    sacar_captura()
 
 def estres_test():
     class UserBehavior(locust.TaskSet):
@@ -262,11 +276,12 @@ def agregar_Stock():
         print("stock agregado con exito")
     except:
         print('no se pudo agregar stock de producto')
+    sacar_captura()
 
 try:
-    #loginTest()
+    loginTest()
     #sleep(5)
-    seleccionarProducto()
+    #seleccionarProducto()
     #sleep(5)
     #tetsLogout()
     #sleep(5)
