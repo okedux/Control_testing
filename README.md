@@ -1,3 +1,5 @@
+este software no fue diseñado por mi, lo unicoq ue realice de forma autonoma fue la automatizacion de pruebas en python mediante selenium y otras librerias que me permitieron realizarlas de forma optima
+
 "# simple-stock" 
 
 Simple Stock (Inventario Simple) es un sistema web desarrollado con PHP, MySQL y Bootstrap, que cubre una serie de 
