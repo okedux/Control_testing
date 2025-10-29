@@ -1,4 +1,4 @@
-este software no fue diseñado por mi, lo unicoq ue realice de forma autonoma fue la automatizacion de pruebas en python mediante selenium y otras librerias que me permitieron realizarlas de forma optima
+Este software no fue diseñado por mí; mi participación se centró exclusivamente en la automatización de pruebas. De manera autónoma, implementé un conjunto de scripts en Python utilizando Selenium y otras bibliotecas complementarias, lo que me permitió realizar pruebas funcionales y de rendimiento de forma eficiente y optimizada. Gracias a estas herramientas, pude garantizar una validación más ágil y precisa del comportamiento del sistema.
 
 "# simple-stock" 
 
