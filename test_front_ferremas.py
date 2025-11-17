@@ -278,7 +278,7 @@ def agregar_Stock():
         print('no se pudo agregar stock de producto')
     sacar_captura()
 
-try:
+def fase1():
     loginTest()
     sacar_captura()
     sleep(5)
@@ -287,21 +287,26 @@ try:
     sleep(5)
     tetsLogout()
     sacar_captura()
-    #sleep(5)
-    #testeCategoria()
-    #sacar_captura()
-    #sleep(5)
-    #añadir_categoria()
-    #sacar_captura()
-    #sleep(5)
-    #añadir_usuario()
-    #sacar_captura()
-    #sleep(5)
-    #estres_test()
-    #sacar_captura()
+    print("face 1 completa")
 
+def fase2():
+    sleep(5)
+    testeCategoria()
+    sacar_captura()
+    sleep(5)
+    añadir_categoria()
+    sacar_captura()
+    sleep(5)
+    añadir_usuario()
+    sacar_captura()
+    sleep(5)
+    estres_test()
+    sacar_captura()
     print('pruebas realizadas con exito')
 
+try:
+    #fase1()
+    fase2()
 
 except Exception as e:
     print("Ocurrió un error inesperado:", e)
